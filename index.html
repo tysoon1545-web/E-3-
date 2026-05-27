@@ -3,30 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalbim Senin İçin</title>
+  <title>Seni Seviyorum ❤️</title>
   <style>
     body {
       margin: 0;
       height: 100vh;
+      background: #000;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      overflow: hidden;
+      font-family: Arial, sans-serif;
     }
+
     .heart {
-      font-size: 180px;
-      animation: beat 1s infinite;
-      cursor: pointer;
+      position: relative;
+      width: 600px;
+      height: 500px;
     }
-    @keyframes beat {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-      100% { transform: scale(1); }
+
+    .text {
+      position: absolute;
+      color: #ff3366;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 0 0 8px #ff6699;
+      white-space: nowrap;
+      animation: glow 2s infinite alternate;
+      user-select: none;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 8px #ff6699; }
+      to { text-shadow: 0 0 20px #ff3366, 0 0 30px #ff99aa; }
     }
   </style>
 </head>
 <body>
-  <div class="heart">❤️</div>
+  <div class="heart" id="heart"></div>
+
+  <script>
+    const heart = document.getElementById('heart');
+    const texts = "I LOVE YOU ";
+    const rows = 18;
+    const cols = 35;
+
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const text = document.createElement('div');
+        text.className = 'text';
+        text.textContent = texts;
+
+        // Kalp şeklini oluştur
+        const centerX = cols / 2;
+        const centerY = rows / 2.3;
+        const dx = x - centerX;
+        const dy = y - centerY;
+        
+        const distance = Math.sqrt(dx*dx + dy*dy * 2.2);
+        const heartShape = distance < 12 && 
+                          (y < centerY + 8 || 
+                           (dx*dx + (dy-6)*(dy-6)*1.8) < 80);
+
+        if (heartShape) {
+          const scale = 1 - (distance / 18);
+          text.style.left = (x * 16) + 'px';
+          text.style.top = (y * 22) + 'px';
+          text.style.opacity = scale * 0.9 + 0.4;
+          text.style.transform = `scale(${scale * 0.7 + 0.6})`;
+          heart.appendChild(text);
+        }
+      }
+    }
+
+    // Tıklayınca efekt
+    heart.addEventListener('click', () => {
+      heart.style.transform = 'scale(1.15)';
+      setTimeout(() => heart.style.transform = 'scale(1)', 200);
+    });
+  </script>
 </body>
 </html>
